@@ -1,0 +1,122 @@
+<div
+  class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex bg-black bg-opacity-50"
+>
+  <!-- Dialog Container -->
+  <div
+    class="relative w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 my-6 mx-auto max-w-7xl sm:max-h-60vh overflow-auto"
+  >
+    <!-- Dialog Box -->
+    <div
+      class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"
+    >
+      <!-- Dialog Header -->
+      <div class="flex items-start justify-between p-5 rounded-t">
+        <span class="text-sm text-gray-400 mr-10">
+          {{ this.isEdit ? "Edição" : "Cadastro" }} de Tarefa
+        </span>
+      </div>
+      <!-- Form Section -->
+      <form (ngSubmit)="onSubmit()" [formGroup]="form">
+        <!-- Input Fields -->
+        <div class="relative p-6 flex-auto">
+          <!-- Title Field -->
+          <div class="mb-3 pt-0">
+            <input
+              type="text"
+              formControlName="title"
+              class="px-3 py-3 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+              placeholder="Título"
+            />
+            <div
+              *ngIf="form.get('title')?.invalid && form.get('title')?.touched"
+              class="text-red-500 text-xs mt-2"
+            >
+              O título é obrigatório.
+            </div>
+          </div>
+          <!-- Description Field -->
+          <div class="mb-3 pt-0">
+            <textarea
+              formControlName="description"
+              class="px-3 py-3 placeholder-blueGray-300 text-black bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+              placeholder="Descrição"
+              rows="5"
+              style="resize: none"
+            ></textarea>
+            <div
+              *ngIf="
+                form.get('description')?.invalid &&
+                form.get('description')?.touched
+              "
+              class="text-red-500 text-xs mt-2"
+            >
+              A descrição é obrigatória.
+            </div>
+          </div>
+          <!-- Container para os campos de seleção -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Status Field -->
+            <div class="mb-3 pt-0">
+              <ng-select
+                formControlName="status"
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
+                [multiple]="false"
+                [notFoundText]="'Nenhuma opção disponível'"
+                [clearable]="false"
+              ></ng-select>
+              <div
+                *ngIf="
+                  form.get('status')?.invalid && form.get('status')?.touched
+                "
+                class="text-red-500 text-xs mt-2"
+              >
+                O status é obrigatório.
+              </div>
+            </div>
+            <!-- Categories Field -->
+            <div class="mb-3 pt-0">
+              <ng-select
+                appendTo="body"
+                formControlName="categories"
+                [items]="categoryOptions"
+                bindLabel="label"
+                bindValue="value"
+                [multiple]="true"
+                [notFoundText]="'Nenhuma opção disponível'"
+              ></ng-select>
+
+              <!-- Container para Chips de Categorias Selecionadas -->
+              <div class="chip-list p-4">
+                <span
+                  *ngFor="let category of form.get('categories')?.value"
+                  class="inline-flex items-center px-3 m-1 py-0.5 rounded-full text-sm font-medium"
+                  [ngClass]="getCategoryColor(category)"
+                >
+                  {{ category }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Dialog Actions -->
+        <div class="flex items-center justify-end p-6 rounded-b">
+          <button
+            class="text-gray-500 bg-transparent border border-gray-500 hover:bg-gray-500 hover:text-white font-bold text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="button"
+            (click)="onCancel()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="text-white bg-blue-500 border border-blue-500 hover:bg-blue-600 hover:text-white font-bold text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="submit"
+          >
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

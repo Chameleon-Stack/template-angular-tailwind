@@ -1,0 +1,35 @@
+<div
+  class="flex items-center border border-gray-300 rounded cursor-pointer p-2 relative"
+  (click)="toggleDropdown()"
+>
+  <img
+    [src]="user.photo"
+    (error)="user.photo = 'assets/images/logo/blue-logo-without-bg.png'"
+    alt="User"
+    class="w-12 h-12 rounded-full mr-2"
+  />
+  <div class="flex flex-col">
+    <span class="font-bold">{{ user.name }}</span>
+    <span class="text-sm text-gray-600">{{ user.email }}</span>
+  </div>
+  <!-- Dropdown Menu -->
+  <div
+    class="dropdown-menu absolute right-0 bg-white border border-gray-300 rounded shadow-lg py-1 z-50"
+    *ngIf="showDropdown"
+    style="top: 100%"
+  >
+    <!-- Dropdown Items -->
+    <a
+      href="#"
+      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      (click)="openRegisterDialog()"
+      >Editar perfil</a
+    >
+    <a
+      href="#"
+      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      (click)="logout()"
+      >Logout</a
+    >
+  </div>
+</div>

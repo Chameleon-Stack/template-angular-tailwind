@@ -1,0 +1,116 @@
+<div
+  class="fixed inset-0 overflow-hidden z-40 md:hidden"
+  role="dialog"
+  aria-modal="true"
+  [class.hidden]="!showSidebar"
+>
+  <div class="absolute inset-0 overflow-hidden">
+    <!-- Fundo escurecido -->
+    <div
+      class="absolute inset-0 bg-black bg-opacity-25 transition-opacity"
+      (click)="onToggleSidebar()"
+      [class.opacity-0]="!showSidebar"
+      [class.opacity-100]="showSidebar"
+    ></div>
+
+    <!-- Conteúdo da barra lateral -->
+    <section
+      class="absolute inset-y-0 left-0 max-w-xs w-full bg-white shadow-xl transition-transform transform h-full"
+      [class.translate-x-0]="showSidebar"
+      [class.-translate-x-full]="!showSidebar"
+    >
+      <div class="absolute top-0 right-0 -mr-12 pt-2">
+        <button
+          class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-white"
+          (click)="onToggleSidebar()"
+        >
+          <span class="sr-only">Fechar barra lateral</span>
+          <!-- Ícone de fechar -->
+          <svg
+            class="h-6 w-6 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="flex-1 h-full pt-5 pb-4 overflow-y-auto">
+        <!-- Logo -->
+        <div class="w-auto flex items-center justify-center">
+          <span class="logo items-center justify-center flex"
+            ><img
+              class="logo-icon mx-2 h-12 w-12"
+              src="assets/images/logo/blue-logo-without-bg.png"
+            />
+          </span>
+        </div>
+        <!-- divider -->
+        <hr class="my-4" />
+        <!-- Search Bar -->
+        <div class="mt-5 px-2 space-y-1">
+          <div class="search-section flex-grow pt-2">
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                <svg
+                  class="h-5 w-5 text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <input
+                type="text"
+                class="pl-10 pr-4 py-2 block w-full border-2 border-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
+                placeholder="Pesquisar"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- User Card -->
+        <div class="m-2 pt-5">
+          <app-user-card
+            *ngIf="user; else loginRegister"
+            [user]="user"
+            (openModalEditProfile)="onOpenRegisterModal()"
+            (onLogout)="onLogout()"
+          ></app-user-card>
+        </div>
+
+        <ng-template #loginRegister>
+          <div
+            class="login-register-options flex justify-center items-center flex-grow"
+          >
+            <button
+              class="btn btn-blue px-4 mx-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 shadow hover:shadow-lg transition duration-150 ease-in-out hover:scale-105 focus:ring-offset-2"
+              (click)="onOpenLoginModal()"
+            >
+              Login
+            </button>
+            <button
+              class="btn btn-blue px-4 mx-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 shadow hover:shadow-lg transition duration-150 ease-in-out hover:scale-105 focus:ring-offset-2"
+              (click)="onOpenRegisterModal()"
+            >
+              Register
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </section>
+  </div>
+</div>

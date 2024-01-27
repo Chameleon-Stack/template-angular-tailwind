@@ -1,0 +1,66 @@
+<div class="card bg-white shadow rounded-lg my-4">
+  <div class="card-header flex justify-between items-center p-4">
+    <div class="header-content">
+      <h2 class="font-bold text-black">{{ task.title }}</h2>
+    </div>
+    <div
+      class="relative inline-block text-left"
+      (document:click)="closeMenu($event)"
+    >
+      <button
+        class="menu-button flex flex-col items-center justify-center w-8 h-8 rounded-full focus:outline-none focus:bg-gray-100 hover:bg-gray-200"
+        (click)="toggleOpen($event)"
+      >
+        <div
+          class="w-1 h-1 bg-gray-500 rounded-full mb-0.5 hover:bg-gray-700"
+        ></div>
+        <div
+          class="w-1 h-1 bg-gray-500 rounded-full mb-0.5 hover:bg-gray-700"
+        ></div>
+        <div class="w-1 h-1 bg-gray-500 rounded-full hover:bg-gray-700"></div>
+      </button>
+      <div
+        *ngIf="open"
+        class="origin-top-right absolute right-0 mt-2 w-24 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+      >
+        <div
+          class="py-1"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+        >
+          <button
+            class="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            role="menuitem"
+            (click)="editTask()"
+          >
+            Editar
+          </button>
+          <button
+            class="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            role="menuitem"
+            (click)="deleteTask()"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chip-list p-4">
+    <ng-container *ngIf="isArray(task.category)">
+      <span
+        *ngFor="let category of task.category"
+        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium"
+        [ngClass]="getCategoryColor(category)"
+      >
+        {{ category }}
+      </span>
+    </ng-container>
+  </div>
+  <div class="card-content p-4">
+    <p>
+      {{ task.description }}
+    </p>
+  </div>
+</div>

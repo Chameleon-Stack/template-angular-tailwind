@@ -1,0 +1,66 @@
+<!-- header -->
+<div class="flex justify-end items-center">
+  <div class="mx-4">
+    <button
+      class="bg-blue-500 text-white active:bg-blue-600 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+      type="button"
+      (click)="openDialog()"
+    >
+      Nova Task
+    </button>
+  </div>
+</div>
+<!-- conteúdo -->
+<div class="pb-0 h-[85%] overflow-hidden">
+  <!-- colunas -->
+  <div class="flex overflow-x-auto overflow-y-hidden h-full min-w-[20rem]">
+    <div
+      *ngFor="let header of headers"
+      class="border rounded m-4 bg-gray-100 h-full overflow-auto min-w-[20rem] sm:pb-16 text-gray-500 flex-1"
+    >
+      <!-- Header -->
+      <div class="flex-col sticky top-0 bg-gray-100 z-10">
+        <div
+          class="flex justify-between items-center mb-2 bg-white rounded p-4"
+        >
+          <div class="flex items-center">
+            <span class="font-medium mr-2">{{ header.label }}</span>
+            <!-- Quantidade de cards -->
+            <span
+              class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-1 rounded-full h-6 w-6 flex items-center justify-center"
+              >{{ getCardsByStatus(header.label).length }}</span
+            >
+          </div>
+        </div>
+        <button
+          class="text-gray-300 font-bold text-sm px-4 py-2 rounded outline-none focus:outline-none mb-1 ease-linear transition-all duration-150 hover:text-gray-500"
+          type="button"
+          (click)="openDialog(header.label)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 inline-block mr-1 mb-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <span class="">Nova task</span>
+        </button>
+      </div>
+      <div
+        class="px-4"
+        *ngFor="let item of getCardsByStatus(header.label); let isLast = last"
+        [ngStyle]="{ 'margin-bottom': isLast ? '40px' : '0' }"
+      >
+        <app-task-card [task]="item"></app-task-card>
+      </div>
+    </div>
+  </div>
+</div>
