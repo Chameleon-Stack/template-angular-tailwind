@@ -1,9 +1,9 @@
 export interface User {
-  id?: string;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
   name: string;
   email: string;
   password: string;
-  photo?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  photo?: string | File;
 }

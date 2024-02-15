@@ -1,11 +1,12 @@
+import { Category } from "@interfaces/category/category.interface";
+
 export interface Card {
-  id?: string;
+  id: string;
+  status: string | "Não iniciado" | "Em progresso" | "Completo";
   title: string;
   description: string;
-  status: 'Não iniciado' | 'Em progresso' | 'Completo';
-  category_ids?: string[];
-  category?: string;
+  createdAt: Date;
+  updatedAt: Date;
   user_id: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  categories: Category[];
 }
