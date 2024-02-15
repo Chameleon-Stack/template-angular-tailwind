@@ -9,15 +9,15 @@ export class MenuService {
 
   isOpen$ = this.isOpen.asObservable();
 
-  toggleMenu() {
+  toggle() {
     this.isOpen.next(!this.isOpen.value);
   }
 
-  openMenu() {
+  open() {
     this.isOpen.next(true);
   }
 
-  closeMenu() {
+  close() {
     this.isOpen.next(false);
   }
 }

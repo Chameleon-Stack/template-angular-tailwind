@@ -9,11 +9,11 @@ import { User } from '@interfaces/user/user.interface';
 export class UserEventService {
   private userChangeSubject = new Subject<User | null>();
 
-  public userChanged(): Observable<User | null> {
+  public get(): Observable<User | null> {
     return this.userChangeSubject.asObservable();
   }
 
-  public changeUser(user: User | null): void {
+  public emit(user: User | null): void {
     this.userChangeSubject.next(user);
   }
 }

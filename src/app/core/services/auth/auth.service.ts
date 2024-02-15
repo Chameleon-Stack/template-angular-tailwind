@@ -33,6 +33,6 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return localStorage.getItem('user') !== null;
+    return localStorage.getItem('token') ? true : false;
   }
 }

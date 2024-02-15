@@ -13,7 +13,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  create(user: User): Observable<User> {
+  create(user: User | FormData): Observable<User> {
     return this.http.post<User>(`${this.baseUrl}/user`, user);
   }
 
@@ -25,7 +25,7 @@ export class UserService {
     return this.http.get<User>(`${this.baseUrl}/user/${id}`);
   }
 
-  update(id: string, user: User): Observable<User> {
+  update(id: string, user: User | FormData): Observable<User> {
     return this.http.patch<User>(`${this.baseUrl}/user/${id}`, user);
   }
 }
