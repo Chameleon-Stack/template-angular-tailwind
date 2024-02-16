@@ -1,27 +1,101 @@
-# TemplateAngularTailwind
+# CHAMELEON STACK - KANBAN
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.10.
+This project is a Kanban solution developed with Angular CLI version 16.2.10, aimed at development teams looking for an adaptable and efficient task management tool.
 
-## Development server
+### 📋 PREREQUISITES
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- NodeJs
+- NPM
+- Angular CLI
 
-## Code scaffolding
+## 🔧 INSTALLING PREREQUISITES
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Installing NodeJS and NPM
 
-## Build
+- Visit [Node.js](https://nodejs.org/en) and download the LTS version.
+- Follow the installation process by clicking next until it finishes.
+- In the terminal, check the installed versions with the commands:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
+node -v
+npm -v
+```
 
-## Running unit tests
+### Installing Angular CLI
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Install Angular CLI globally with the command:
 
-## Running end-to-end tests
+```
+npm install -g @angular/cli
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- Check the installed version with the command:
 
-## Further help
+```
+ng --version
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## ⚙️ CONFIGURING THE PROJECT
+
+- Clone the repository and install the dependencies:
+
+```
+git clone git@github.com:Chameleon-Stack/template-angular-tailwind.git
+cd template-angular-tailwind
+npm install
+```
+
+- Run the development server:
+
+```
+ng serve
+```
+
+- Access `http://localhost:4200/` in the browser.
+
+## ⚙️ Configuring Environment Files
+
+The environment files are located in `src/environments/`. There are two example files:
+
+- `environment.ts`: for development
+- `environment.prod.ts`: for production
+
+You need to configure these files according to your environment. Here is an example of how you can configure `environment.ts`:
+
+```typescript
+export const environment = {
+production: false,
+apiBaseUrl: "http://localhost:3000/api",
+};
+```
+
+And here is an example of how you can configure `environment.prod.ts`:
+
+```typescript
+export const environment = {
+production: true,
+apiBaseUrl: "https://api.example.com",
+};
+```
+
+## 🛠 BUILD
+
+- Run the command to build the project:
+
+```
+ng build
+```
+
+- The artifacts will be stored in the `dist/` directory.
+
+## 📦 DEPLOY
+
+- Run the command to build the project for production:
+
+```
+ng build --prod
+```
+
+- The artifacts will be stored in the `dist/` directory.
+
+# template-angular-tailwind
