@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      new_password: [''],
       photo: [''],
     });
   }
@@ -50,6 +50,10 @@ export class RegisterComponent implements OnInit {
         email: this.user.email,
         photo: this.user.photo,
       });
+      this.form
+        .get('new_password')
+        ?.setValidators([Validators.required, Validators.minLength(6)]);
+      this.form.get('new_password')?.updateValueAndValidity();
     }
   }
 
@@ -74,6 +78,7 @@ export class RegisterComponent implements OnInit {
       this.toastr.success('Usuário criado com sucesso!', 'Sucesso');
       await this.createDefaultCategories(user.id);
     } catch (error: any) {
+      console.log(error);
       this.toastr.error('Erro ao criar usuário: ' + error.message, 'Erro');
     }
   }
