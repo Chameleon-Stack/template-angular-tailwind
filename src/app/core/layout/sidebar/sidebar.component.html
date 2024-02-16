@@ -87,8 +87,6 @@
           <app-user-card
             *ngIf="user; else loginRegister"
             [user]="user"
-            (openModalEditProfile)="onOpenRegisterModal()"
-            (onLogout)="onLogout()"
           ></app-user-card>
         </div>
 
@@ -98,15 +96,15 @@
           >
             <button
               class="btn btn-blue px-4 mx-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 shadow hover:shadow-lg transition duration-150 ease-in-out hover:scale-105 focus:ring-offset-2"
-              (click)="onOpenLoginModal()"
+              routerLink="/login"
             >
-              Login
+              Entrar
             </button>
             <button
               class="btn btn-blue px-4 mx-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 shadow hover:shadow-lg transition duration-150 ease-in-out hover:scale-105 focus:ring-offset-2"
-              (click)="onOpenRegisterModal()"
+              routerLink="/register"
             >
-              Register
+              Cadastrar
             </button>
           </div>
         </ng-template>

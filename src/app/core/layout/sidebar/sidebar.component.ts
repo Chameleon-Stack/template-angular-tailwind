@@ -12,10 +12,6 @@ export class SidebarComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   @Input() showSidebar: boolean = false;
 
-  @Output() openLoginModal = new EventEmitter<void>();
-  @Output() openRegisterModal = new EventEmitter<void>();
-  @Output() openEditProfileModal = new EventEmitter<void>();
-
   constructor() {}
 
   ngOnInit(): void {}
@@ -26,17 +22,5 @@ export class SidebarComponent implements OnInit {
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
-  }
-
-  onOpenLoginModal(): void {
-    this.openLoginModal.emit();
-  }
-
-  onOpenRegisterModal(): void {
-    this.openRegisterModal.emit();
-  }
-
-  onOpenEditProfileModal(): void {
-    this.openEditProfileModal.emit();
   }
 }

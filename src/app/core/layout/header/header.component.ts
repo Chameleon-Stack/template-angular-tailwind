@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewContainerRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoginDialogComponent } from '@components/login-dialog/login-dialog.component';
-import { RegisterDialogComponent } from '@components/register-dialog/register-dialog.component';
 import { User } from '@interfaces/user/user.interface';
 import { AuthService } from '@services/auth/auth.service';
 import { ModalService } from '@services/modal/modal.service';
@@ -43,19 +41,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public logout() {
     this.authService.logout();
-    this.userEventService.changeUser(null);
+    this.userEventService.emit(null);
     this.user = null as any;
     this.showDropdown = false;
     this.modalService.close();
     window.location.reload();
-  }
-
-  public openLoginModal() {
-    this.modalService.open(LoginDialogComponent);
-  }
-
-  public openRegisterModal() {
-    this.modalService.open(RegisterDialogComponent);
   }
 
   public toggleDropdown() {
@@ -64,13 +54,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public toggleSidebar() {
     this.showSidebar = !this.showSidebar;
-  }
-
-  public editUser() {
-    this.modalService.open(RegisterDialogComponent, {
-      isEdit: true,
-      user: this.user,
-    });
   }
 
   private initializeUser() {
@@ -88,7 +71,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private listenUserChanges() {
     this.userEventService
-      .userChanged()
+      .get()
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
         if (!user) return;

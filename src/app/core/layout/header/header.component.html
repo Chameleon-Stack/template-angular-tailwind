@@ -1,13 +1,8 @@
-<div class="mx-auto px-4 sm:px-8">
+<div class="mx-auto px-[10%]">
   <!-- Toolbar Section -->
   <div class="custom-toolbar flex flex-row justify-between bg-white py-2">
     <!-- Logo -->
-    <span class="logo pt-2 flex-grow sm:items-center sm:justify-center">
-      <img
-        class="logo-icon mx-2 h-12 w-12"
-        src="assets/images/logo/blue-logo-without-bg.png"
-      />
-    </span>
+    <app-logo class="pt-2 flex-grow sm:items-center sm:justify-center" />
 
     <!-- Search Bar -->
     <app-search-bar
@@ -23,8 +18,6 @@
         *ngIf="user; else loginRegister"
         class="md:flex hidden pt-2"
         [user]="user"
-        (openModalEditProfile)="editUser()"
-        (onLogout)="logout()"
       ></app-user-card>
 
       <!-- Login/Register -->
@@ -33,16 +26,16 @@
           <button
             class="text-gray-500 bg-transparent border border-gray-500 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-gray-500 hover:text-white"
             type="button"
-            (click)="openLoginModal()"
+            routerLink="/login"
           >
-            Login
+            Entrar
           </button>
           <button
             class="bg-blue-500 text-white active:bg-blue-600 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             type="button"
-            (click)="openRegisterModal()"
+            routerLink="/register"
           >
-            Register
+            Cadastrar
           </button>
         </div>
       </ng-template>
@@ -74,9 +67,6 @@
     (toggleSidebar)="toggleSidebar()"
     (logout)="logout()"
     [user]="user"
-    (openEditProfileModal)="editUser()"
-    (openLoginModal)="openLoginModal()"
-    (openRegisterModal)="openRegisterModal()"
     (toggleDropdown)="toggleDropdown()"
   ></app-sidebar>
 
