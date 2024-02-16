@@ -4,22 +4,26 @@ import { NgModule } from '@angular/core';
 import { SearchBarComponent } from '@components/search-bar/search-bar.component';
 import { UserCardComponent } from '@components/user-card/user-card.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { RegisterDialogComponent } from '@components/register-dialog/register-dialog.component';
-import { LoginDialogComponent } from '@components/login-dialog/login-dialog.component';
+import { CategoryTextColorPipe } from './pipes/category-text-color.pipe';
+import { CategoryBackgroundColorPipe } from './pipes/category-background-color.pipe';
+import { RouterModule } from '@angular/router';
+import { LogoComponent } from '@components/logo/logo.component';
 
 @NgModule({
   declarations: [
-    LoginDialogComponent,
-    RegisterDialogComponent,
     SearchBarComponent,
     UserCardComponent,
+    CategoryTextColorPipe,
+    CategoryBackgroundColorPipe,
+    LogoComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FontAwesomeModule],
   exports: [
-    LoginDialogComponent,
-    RegisterDialogComponent,
     SearchBarComponent,
     UserCardComponent,
+    CategoryTextColorPipe,
+    CategoryBackgroundColorPipe,
+    LogoComponent
   ],
 })
 export class SharedModule {}

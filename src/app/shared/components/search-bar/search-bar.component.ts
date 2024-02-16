@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from './../../../core/services/auth/auth.service';
-import { CardService } from './../../../core/services/card/card.service';
-import { User } from '@interfaces/user/user.interface';
+
+import { AuthService } from '@services/auth/auth.service';
+import { FilterEventService } from '@services/filter-event/filter-event.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -15,7 +15,7 @@ export class SearchBarComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private cardService: CardService,
+    private filterEventService: FilterEventService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService
   ) {
@@ -33,46 +33,19 @@ export class SearchBarComponent implements OnInit {
 
     const search = this.form.value.search;
 
-    this.authService.getCurrentUser().subscribe((user) => {
-      if (!this.isValidUser(user)) {
-        return;
-      }
+    if (!search) {
+      return this.filterEventService.emit('');
+    }
 
-      this.searchCards(user!, search);
-    });
+    this.filterEventService.emit(search);
   }
 
   private isValidForm(): boolean {
     if (this.form.invalid) {
-      this.toastr.error('Entre com um valor válido', 'Erro');
-      return false;
-    }
-
-    if (this.form.value.search === undefined) {
-      this.toastr.error('Entre com um valor válido', 'Erro');
+      this.toastr.error('Invalid form', 'Error');
       return false;
     }
 
     return true;
-  }
-
-  private isValidUser(user: User | null): boolean {
-    if (user === null) {
-      this.toastr.error('O usuário não foi encontrado', 'Erro');
-      return false;
-    }
-
-    if (!user.id) {
-      this.toastr.error('O id do usuário não foi encontrado', 'Erro');
-      return false;
-    }
-
-    return true;
-  }
-
-  private searchCards(user: User, search: string) {
-    this.cardService.get(user.id!, { title: search }).subscribe((cards) => {
-      console.log(cards);
-    });
   }
 }

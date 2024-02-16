@@ -1,16 +1,16 @@
 <div
-  class="flex items-center border border-gray-300 rounded cursor-pointer p-2 relative"
+  class="flex items-center cursor-pointer p-2 relative"
   (click)="toggleDropdown()"
 >
   <img
     [src]="user.photo"
-    (error)="user.photo = 'assets/images/logo/blue-logo-without-bg.png'"
+    (error)="user.photo = 'assets/images/default-user.jpeg'"
     alt="User"
     class="w-12 h-12 rounded-full mr-2"
   />
   <div class="flex flex-col">
     <span class="font-bold">{{ user.name }}</span>
-    <span class="text-sm text-gray-600">{{ user.email }}</span>
+    <span class="text-xs gray-3">{{ user.email }}</span>
   </div>
   <!-- Dropdown Menu -->
   <div
@@ -22,14 +22,14 @@
     <a
       href="#"
       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      (click)="openRegisterDialog()"
+      routerLink="/register"
       >Editar perfil</a
     >
     <a
       href="#"
       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
       (click)="logout()"
-      >Logout</a
-    >
+      >Sair
+    </a>
   </div>
 </div>
