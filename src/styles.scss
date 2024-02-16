@@ -1,10 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 /* You can add global styles to this file, and also import other style files */
 /* Importar as funcionalidades básicas do Tailwind */
+@use "./variables.scss" as *;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-
 html,
 body {
   height: 100%;
@@ -12,46 +14,73 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Poppins", Roboto, "Helvetica Neue", sans-serif !important;
 }
-$brown-100: #f5f5dc;
-$brown-200: #eedd82;
-$brown-300: #d2b48c;
-$brown-400: #bc8f8f;
-$brown-500: #a52a2a;
-$brown-600: #8b4513;
-$brown-700: #8b4513;
-$brown-800: #8b4513;
-$brown-900: #8b4513;
 
-.bg {
-  &-brown {
-    &-100 {
-      background-color: $brown-100;
-    }
-    &-200 {
-      background-color: $brown-200;
-    }
-    &-300 {
-      background-color: $brown-300;
-    }
-    &-400 {
-      background-color: $brown-400;
-    }
-    &-500 {
-      background-color: $brown-500;
-    }
-    &-600 {
-      background-color: $brown-600;
-    }
-    &-700 {
-      background-color: $brown-700;
-    }
-    &-800 {
-      background-color: $brown-800;
-    }
-    &-900 {
-      background-color: $brown-900;
-    }
-  }
+.primary {
+  color: $primary !important;
+}
+.primary-bg {
+  background-color: $primary !important;
+}
+.gray-4 {
+  color: $gray-4 !important;
+}
+.gray-4-bg {
+  background-color: $gray-4 !important;
+}
+.gray-3 {
+  color: $gray-3 !important;
+}
+.gray-3-bg {
+  background-color: $gray-3 !important;
+}
+.gray-2 {
+  color: $gray-2 !important;
+}
+.gray-2-bg {
+  background-color: $gray-2 !important;
+}
+.gray-1 {
+  color: $gray-1 !important;
+}
+.gray-1-bg {
+  background-color: $gray-1 !important;
+}
+.negative {
+  color: $negative !important;
+}
+.negative-bg {
+  background-color: $negative-bg !important;
+}
+.medium {
+  color: $medium !important;
+}
+.medium-bg {
+  background-color: $medium-bg !important;
+}
+.positive {
+  color: $positive !important;
+}
+.positive-bg {
+  background-color: $positive-bg !important;
+}
+.large-button {
+  padding: 22px !important;
+}
+.white {
+  color: #fff !important;
+}
+.white-bg {
+  background-color: #fff !important;
+}
+
+/* Personalizando a barra de rolagem */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Cor da barra de rolagem */
+::-webkit-scrollbar-thumb {
+  background: #888;
 }
