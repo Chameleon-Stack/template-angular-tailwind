@@ -57,30 +57,33 @@ export class TaskDialogComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.user = await this.getCurrentUser();
-    this.updateFormValues();
-    this.categoryService.get(this.user.id).subscribe((categories) => {
+    await this.categoryService.get(this.user.id).subscribe((categories) => {
       this.categories = categories;
       this.categoriesOptions = categories.map((category) => ({
         label: category.name,
         value: category.id!,
       }));
     });
+    this.updateFormValues();
   }
 
   private updateFormValues(): void {
     if (this.isEdit) {
-      this.form.get('categories')?.setValidators(Validators.required);
       this.form.get('category_ids')?.setValidators(Validators.required);
     }
 
     if (this.task) {
       this.form.patchValue({
-        user_id: this.task.user_id || this.user.id,
+        user_id: this.task.user_id,
         title: this.task.title,
         description: this.task.description,
         status: this.task.status,
-        categories: this.task.categories.map((category) => category.name),
-        category_ids: this.task.categories.map((category) => category.id),
+        categories: this.task.categories
+          ? this.task.categories.map((category) => category.name)
+          : [],
+        category_ids: this.task.categories
+          ? this.task.categories.map((category) => category.id)
+          : [],
       });
     } else {
       this.form.patchValue({
@@ -141,7 +144,8 @@ export class TaskDialogComponent implements OnInit {
   }
 
   updateTask(): Observable<any> {
-    return this.cardService.update(this.task?.id ?? '', this.form.value);
+    const { categories, ...task } = this.form.value;
+    return this.cardService.update(this.task?.id, task);
   }
 
   onCancel(): void {

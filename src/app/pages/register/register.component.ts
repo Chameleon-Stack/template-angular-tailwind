@@ -45,6 +45,7 @@ export class RegisterComponent implements OnInit {
       ? JSON.parse(localStorage.getItem('user') || '{}')
       : null;
     if (this.user) {
+      this.user.photo ? (this.selectedImageUrl = this.user.photo as string) : null;
       this.form.patchValue({
         name: this.user.name,
         email: this.user.email,
@@ -62,12 +63,17 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    const user = this.form.value;
-    user.photo = this.selectedImageFile;
+    const formData = new FormData();
+    formData.append('name', this.form.get('name')?.value);
+    formData.append('email', this.form.get('email')?.value);
+    formData.append('password', this.form.get('password')?.value);
+    formData.append('new_password', this.form.get('new_password')?.value);
+    formData.append('photo', this.selectedImageFile);
+
     if (this.user) {
-      await this.updateUser(this.user.id, user);
+      await this.updateUser(this.user.id, formData);
     } else {
-      await this.createUser(user);
+      await this.createUser(formData);
     }
   }
 
@@ -78,7 +84,6 @@ export class RegisterComponent implements OnInit {
       this.toastr.success('Usuário criado com sucesso!', 'Sucesso');
       await this.createDefaultCategories(user.id);
     } catch (error: any) {
-      console.log(error);
       this.toastr.error('Erro ao criar usuário: ' + error.message, 'Erro');
     }
   }
