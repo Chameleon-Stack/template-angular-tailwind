@@ -3,7 +3,8 @@
 >
   <!-- Dialog Container -->
   <div
-    class="relative w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 my-6 mx-auto max-w-7xl sm:max-h-60vh overflow-auto"
+    class="relative my-6 mx-auto max-w-7xl sm:max-h-60vh overflow-auto"
+    style="width: 600px"
   >
     <!-- Dialog Box -->
     <div
@@ -54,49 +55,49 @@
             </div>
           </div>
           <!-- Container para os campos de seleção -->
-          <div class="grid grid-cols-2 gap-4">
-            <!-- Status Field -->
-            <div class="mb-3 pt-0">
-              <ng-select
-                formControlName="status"
-                [items]="statusOptions"
-                bindLabel="label"
-                bindValue="value"
-                [multiple]="false"
-                [notFoundText]="'Nenhuma opção disponível'"
-                [clearable]="false"
-              ></ng-select>
-              <div
-                *ngIf="
-                  form.get('status')?.invalid && form.get('status')?.touched
-                "
-                class="text-red-500 text-xs mt-2"
-              >
-                O status é obrigatório.
-              </div>
+          <!-- Status Field -->
+          <div class="mb-3 pt-0">
+            <ng-select
+              formControlName="status"
+              [items]="statusOptions"
+              bindLabel="label"
+              bindValue="value"
+              [multiple]="false"
+              [notFoundText]="'Nenhuma opção disponível'"
+              [clearable]="false"
+            ></ng-select>
+            <div
+              *ngIf="form.get('status')?.invalid && form.get('status')?.touched"
+              class="text-red-500 text-xs mt-2"
+            >
+              O status é obrigatório.
             </div>
-            <!-- Categories Field -->
-            <div class="mb-3 pt-0">
-              <ng-select
-                appendTo="body"
-                formControlName="categories"
-                [items]="categoryOptions"
-                bindLabel="label"
-                bindValue="value"
-                [multiple]="true"
-                [notFoundText]="'Nenhuma opção disponível'"
-              ></ng-select>
-
-              <!-- Container para Chips de Categorias Selecionadas -->
-              <div class="chip-list p-4">
+          </div>
+          <!-- Categories Field -->
+          <div class="mb-3 pt-0" *ngIf="isEdit">
+            <!-- Container para Chips de Categorias Selecionadas -->
+            <div class="chip-list p-4">
+              <span
+                *ngFor="let category of categoriesOptions"
+                class="inline-flex items-center px-3 m-1 py-0.5 rounded-full text-sm font-medium cursor-pointer"
+                [ngClass]="{ 'bg-gray-200': !isSelected(category.label) }"
+                [ngStyle]="{
+                  'background-color': isSelected(category.label)
+                    ? (category.label | categoryBackgroundColor)
+                    : ''
+                }"
+                (click)="toggleCategory(category)"
+              >
                 <span
-                  *ngFor="let category of form.get('categories')?.value"
-                  class="inline-flex items-center px-3 m-1 py-0.5 rounded-full text-sm font-medium"
-                  [ngClass]="getCategoryColor(category)"
+                  [ngStyle]="{
+                    color: isSelected(category.label)
+                      ? (category.label | categoryTextColor)
+                      : 'gray'
+                  }"
                 >
-                  {{ category }}
+                  {{ category.label }}
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>

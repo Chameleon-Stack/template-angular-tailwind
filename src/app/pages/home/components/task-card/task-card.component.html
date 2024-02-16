@@ -1,7 +1,7 @@
 <div class="card bg-white shadow rounded-lg my-4">
   <div class="card-header flex justify-between items-center p-4">
     <div class="header-content">
-      <h2 class="font-bold text-black">{{ task.title }}</h2>
+      <h2 class="text-black">{{ task.title }}</h2>
     </div>
     <div
       class="relative inline-block text-left"
@@ -47,20 +47,32 @@
       </div>
     </div>
   </div>
-  <div class="chip-list p-4">
-    <ng-container *ngIf="isArray(task.category)">
+  <ng-container *ngIf="isArray(task.categories)">
+    <div class="chip-list px-4">
       <span
-        *ngFor="let category of task.category"
-        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium"
-        [ngClass]="getCategoryColor(category)"
+        *ngFor="let category of task.categories"
+        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium mr-2"
+        [ngStyle]="{
+          'background-color': (category.name | categoryBackgroundColor)
+        }"
       >
-        {{ category }}
+        <span [ngStyle]="{ color: (category.name | categoryTextColor) }">
+          {{ category.name }}
+        </span>
       </span>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
   <div class="card-content p-4">
-    <p>
+    <p class="gray-3">
       {{ task.description }}
     </p>
+  </div>
+  <div class="card-actions flex justify-start p-4">
+    <img
+      class="user-image w-6 h-6 rounded-full"
+      [src]="user.photo"
+      (error)="user.photo = 'assets/images/default-user.jpeg'"
+      alt="Imagem do usuário"
+    />
   </div>
 </div>

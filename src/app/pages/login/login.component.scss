@@ -1,0 +1,77 @@
+@use "../../../variables.scss" as v;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.form {
+  width: 40vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 600px) {
+    width: 60vw;
+  }
+}
+
+.form-field {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 15px;
+  padding-right: 20px;
+  button {
+    margin-left: 10px;
+  }
+}
+
+.title {
+  width: 100%;
+  text-align: start;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.cancel-button {
+  border-color: v.$gray-3;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}
+
+.flex-item {
+  flex: 1;
+  margin-right: 10px;
+
+  @media (max-width: 600px) {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+.flex-item:last-child {
+  margin-right: 0;
+
+  @media (max-width: 600px) {
+    margin-bottom: 0;
+  }
+}

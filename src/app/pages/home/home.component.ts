@@ -1,24 +1,17 @@
-import { ToastrService } from 'ngx-toastr';
-import { CategoryEventService } from '@services/category-event/category-event.service';
-// Importações de bibliotecas externas
 import { Component, OnInit } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { ToastrService } from 'ngx-toastr';
 
-// Importações de interfaces
 import { Card } from '@interfaces/card/card.interface';
 import { User } from '@interfaces/user/user.interface';
 
-// Importações de serviços
 import { CardService } from '@services/card/card.service';
-import { CategoryService } from './../../core/services/category/category.service';
 import { ModalService } from '@services/modal/modal.service';
 import { TaskEventService } from '@services/task-event/task-event.service';
 import { UserEventService } from '@services/user-event/user-event.service';
-import { UserService } from '@services/user/user.service';
 
-// Importações de componentes
+import { FilterEventService } from '@services/filter-event/filter-event.service';
 import { TaskDialogComponent } from './components/task-dialog/task-dialog.component';
-import { LoginDialogComponent } from '@components/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -41,45 +34,62 @@ export class HomeComponent implements OnInit {
     private modalService: ModalService,
     private taskEventService: TaskEventService,
     private userEventService: UserEventService,
+    private filterEventService: FilterEventService,
+    private toastr: ToastrService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.user = this.getCurrentUser();
     this.subscribeToEvents();
     await this.loadTasks();
+
+    this.filterEventService.get().subscribe((value) => {
+      if (this.user.id) {
+        if (value) {
+          this.cardService
+            .get(this.user.id, { title: value })
+            .subscribe((cards) => {
+              this.cards = cards;
+            });
+        } else {
+          this.loadTasks();
+        }
+      }
+    });
   }
 
   // Métodos de eventos
   private subscribeToEvents(): void {
-    this.taskEventService.taskChange$.subscribe(async () => {
+    this.taskEventService.get().subscribe(async () => {
       await this.loadTasks();
     });
-    this.userEventService.userChanged().subscribe(async () => {
+    this.userEventService.get().subscribe(async () => {
       this.user = this.getCurrentUser();
       await this.loadTasks();
     });
-  
   }
 
   // Métodos de carregamento
-  private async loadTasks(): Promise<void> {
+  private async loadTasks(filter?: string): Promise<void> {
     if (!this.user.id) return;
-    this.cardService.get(this.user.id).subscribe((cards) => {
-      this.cards = cards;
+    this.cardService.get(this.user.id, { status: filter }).subscribe({
+      next: (cards) => {
+        this.cards = cards;
+      },
+      error: (error) => {
+        this.toastr.error(
+          'Erro ao carregar tarefas' + error.error.message,
+          'Erro'
+        );
+      },
     });
   }
-
-
 
   openDialog(status?: string): void {
     this.modalService.open(TaskDialogComponent, {
       isEdit: false,
       selectedStatus: status,
     });
-  }
-
-  openLoginModal(): void {
-    this.modalService.open(LoginDialogComponent);
   }
 
   private getCurrentUser(): any {

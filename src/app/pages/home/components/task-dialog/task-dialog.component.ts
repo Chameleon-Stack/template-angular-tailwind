@@ -1,7 +1,8 @@
+import { CategoryService } from '@services/category/category.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { firstValueFrom } from 'rxjs';
+import { Observable, catchError, firstValueFrom, of, tap } from 'rxjs';
 
 import { Card } from '@interfaces/card/card.interface';
 import { Category } from '@interfaces/category/category.interface';
@@ -12,15 +13,7 @@ import { CardService } from '@services/card/card.service';
 import { ModalService } from '@services/modal/modal.service';
 import { TaskEventService } from '@services/task-event/task-event.service';
 import { ToastrService } from 'ngx-toastr';
-type CategoryChip =
-  | 'Bug'
-  | 'Melhoria'
-  | 'Feature'
-  | 'Sprint'
-  | 'Review'
-  | 'Não planejada'
-  | 'Urgente'
-  | 'Estória';
+import { IOption } from '@interfaces/ioption/IOption.interface';
 
 @Component({
   selector: 'app-task-dialog',
@@ -34,67 +27,67 @@ export class TaskDialogComponent implements OnInit {
   form!: FormGroup;
   user!: User;
   categories: Category[] = [];
-  statusOptions: { label: string; value: string }[] = [
+  statusOptions: IOption[] = [
     { label: 'Não iniciado', value: 'Não iniciado' },
     { label: 'Em progresso', value: 'Em progresso' },
     { label: 'Completo', value: 'Completo' },
   ];
   faTimes = faTimes;
-  categoriesOptions: { label: string; value: string }[] = [];
   selectedStatus: string = '';
-
-  categoryColors: { [K in CategoryChip]: string } = {
-    Bug: 'bg-orange-300 text-orange-700',
-    Melhoria: 'bg-blue-300 text-blue-700',
-    Feature: 'bg-green-300 text-green-700',
-    Sprint: 'bg-yellow-300 text-yellow-700',
-    Review: 'bg-gray-300 text-gray-700',
-    'Não planejada': 'bg-purple-300 text-purple-700',
-    Urgente: 'bg-red-300 text-red-700',
-    Estória: 'bg-brown-300 text-brown-700',
-  };
-
-  categoryOptions = [
-    { label: 'Bug', value: 'Bug' },
-    { label: 'Melhoria', value: 'Melhoria' },
-    { label: 'Feature', value: 'Feature' },
-    { label: 'Sprint', value: 'Sprint' },
-    { label: 'Review', value: 'Review' },
-    { label: 'Não planejada', value: 'Não planejada' },
-    { label: 'Urgente', value: 'Urgente' },
-    { label: 'Estória', value: 'Estória' },
-  ];
+  categoriesOptions: IOption[] = [];
 
   constructor(
     private authService: AuthService,
     private cardService: CardService,
+    private categoryService: CategoryService,
     private taskEventService: TaskEventService,
     private modalService: ModalService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder
   ) {
     this.form = this.formBuilder.group({
-      user_id: ['', Validators.required],
+      user_id: [''],
       title: ['', Validators.required],
       description: ['', Validators.required],
       status: ['', Validators.required],
       categories: [[]],
+      category_ids: [[]],
     });
   }
 
   async ngOnInit(): Promise<void> {
     this.user = await this.getCurrentUser();
     this.updateFormValues();
+    this.categoryService.get(this.user.id).subscribe((categories) => {
+      this.categories = categories;
+      this.categoriesOptions = categories.map((category) => ({
+        label: category.name,
+        value: category.id!,
+      }));
+    });
   }
 
   private updateFormValues(): void {
-    const { user_id, title, description, status } = this.task || {};
-    this.form.patchValue({
-      user_id: user_id ?? this.user.id ?? '',
-      title: title ?? '',
-      description: description ?? '',
-      status: status ?? 'Não iniciado',
-    });
+    if (this.isEdit) {
+      this.form.get('categories')?.setValidators(Validators.required);
+      this.form.get('category_ids')?.setValidators(Validators.required);
+    }
+
+    if (this.task) {
+      this.form.patchValue({
+        user_id: this.task.user_id || this.user.id,
+        title: this.task.title,
+        description: this.task.description,
+        status: this.task.status,
+        categories: this.task.categories.map((category) => category.name),
+        category_ids: this.task.categories.map((category) => category.id),
+      });
+    } else {
+      this.form.patchValue({
+        user_id: this.user.id,
+        status: this.selectedStatus || '',
+      });
+    }
   }
 
   private async getCurrentUser(): Promise<User> {
@@ -105,60 +98,78 @@ export class TaskDialogComponent implements OnInit {
     return user;
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.form.invalid) {
-      this.toastr.error('Erro ao criar tarefa', 'Erro');
+      this.toastr.error('Preencha todos os campos', 'Erro');
       return;
     }
 
-    this.isEdit ? this.updateTask() : this.createTask();
+    const action = this.isEdit ? this.updateTask() : this.createTask();
+
+    action
+      .pipe(
+        tap((res) => {
+          this.taskEventService.emit();
+          const message = this.isEdit
+            ? 'Tarefa atualizada com sucesso!'
+            : 'Tarefa criada com sucesso!';
+          this.toastr.success(message, 'Sucesso');
+          this.modalService.close();
+        }),
+        catchError((err) => {
+          this.toastr.error(
+            `Erro ao ${this.isEdit ? 'atualizar' : 'criar'} tarefa\n${
+              err.error.message
+            }`,
+            'Erro'
+          );
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  createTask(): void {
+  createTask(): Observable<any> {
     if (!this.user.id) {
       this.toastr.error(
         'Erro ao criar tarefa\n' + 'Usuário não encontrado',
         'Erro'
       );
-      return;
+      return of(null);
     }
-    this.cardService.create(this.user.id!, this.form.value).subscribe({
-      next: () => {
-        this.modalService.close();
-        this.toastr.success('Tarefa criada com sucesso');
-        this.taskEventService.taskChanged();
-      },
-      error: (err) => {
-        this.toastr.error('Erro ao criar tarefa\n' + err.error.message, 'Erro');
-      },
-    });
+    return this.cardService.create(this.user.id!, this.form.value);
   }
 
-  updateTask(): void {
-    this.cardService.update(this.task?.id ?? '', this.form.value).subscribe({
-      next: () => {
-        this.modalService.close();
-        this.toastr.success('Tarefa atualizada com sucesso');
-        this.taskEventService.taskChanged();
-      },
-      error: (err) => {
-        this.toastr.error(
-          'Erro ao atualizar tarefa/n' + err.error.message,
-          'Erro'
-        );
-      },
-    });
+  updateTask(): Observable<any> {
+    return this.cardService.update(this.task?.id ?? '', this.form.value);
   }
 
   onCancel(): void {
     this.modalService.close();
-    this.taskEventService.taskChanged();
+    this.taskEventService.emit();
   }
 
-  getCategoryColor(category: string): string {
-    if (category in this.categoryColors) {
-      return this.categoryColors[category as CategoryChip];
+  public toggleCategory(category: IOption): void {
+    const categories = this.form.get('categories')?.value || [];
+    const category_ids = this.form.get('category_ids')?.value || [];
+
+    const categoryIndex = categories.indexOf(category.label);
+
+    if (categoryIndex > -1) {
+      categories.splice(categoryIndex, 1);
+      category_ids.splice(categoryIndex, 1);
+    } else {
+      categories.push(category.label);
+      category_ids.push(category.value);
     }
-    return 'bg-gray-500 text-gray-700';
+
+    this.form.patchValue({
+      categories: categories,
+      category_ids: category_ids,
+    });
+  }
+
+  isSelected(category: string): boolean {
+    return this.form.get('categories')?.value.includes(category);
   }
 }

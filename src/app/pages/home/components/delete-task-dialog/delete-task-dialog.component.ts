@@ -40,7 +40,7 @@ export class DeleteTaskDialogComponent implements OnInit {
     this.cardService.delete(task.id!).subscribe({
       next: (res) => {
         this.modalService.close();
-        this.taskEventService.taskChanged();
+        this.taskEventService.emit();
         this.toastr.success('Tarefa excluída com sucesso', 'Sucesso');
       },
       error: (error) => {

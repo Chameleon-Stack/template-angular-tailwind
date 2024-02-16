@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeleteTaskDialogComponent } from './components/delete-task-dialog/delete-task-dialog.component';
 import { LayoutModule } from 'src/app/core/layout/layout.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { LayoutModule } from 'src/app/core/layout/layout.module';
     ReactiveFormsModule,
     FontAwesomeModule,
     NgSelectModule,
-    LayoutModule
+    LayoutModule,
+    SharedModule,
   ],
 })
 export class HomeModule {}

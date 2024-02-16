@@ -1,55 +1,33 @@
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { AuthService } from '@services/auth/auth.service';
+import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Card } from '@interfaces/card/card.interface';
 import { ModalService } from '@services/modal/modal.service';
 import { DeleteTaskDialogComponent } from '../delete-task-dialog/delete-task-dialog.component';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
-
-type CategoryChip =
-  | 'Bug'
-  | 'Melhoria'
-  | 'Feature'
-  | 'Sprint'
-  | 'Review'
-  | 'Não planejada'
-  | 'Urgente'
-  | 'Estória';
+import { User } from '@interfaces/user/user.interface';
 
 @Component({
   selector: 'app-task-card',
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss'],
 })
-export class TaskCardComponent {
+export class TaskCardComponent implements OnInit {
   @Input() task!: Card;
   open = false;
-
-  categoryColors: { [K in CategoryChip]: string } = {
-    Bug: 'bg-orange-500 text-orange-700',
-    Melhoria: 'bg-blue-500 text-blue-700',
-    Feature: 'bg-green-500 text-green-700',
-    Sprint: 'bg-yellow-500 text-yellow-700',
-    Review: 'bg-gray-500 text-gray-700',
-    'Não planejada': 'bg-purple-500 text-purple-700',
-    Urgente: 'bg-red-500 text-red-700',
-    Estória: 'bg-brown-500 text-brown-700',
-  };
-
-  categoryOptions = [
-    { label: 'Bug', value: 'Bug' },
-    { label: 'Melhoria', value: 'Melhoria' },
-    { label: 'Feature', value: 'Feature' },
-    { label: 'Sprint', value: 'Sprint' },
-    { label: 'Review', value: 'Review' },
-    { label: 'Não planejada', value: 'Não planejada' },
-    { label: 'Urgente', value: 'Urgente' },
-    { label: 'Estória', value: 'Estória' },
-  ];
+  public user!: User;
 
   constructor(
     private modalService: ModalService,
+    private authService: AuthService,
     private viewContainerRef: ViewContainerRef
   ) {
     this.modalService.setViewContainerRef(this.viewContainerRef);
+  }
+
+  ngOnInit(): void {
+    this.authService.getCurrentUser().subscribe((user) => {
+      if (user) this.user = user;
+    });
   }
 
   openTaskDialog() {
@@ -71,7 +49,6 @@ export class TaskCardComponent {
     });
   }
 
-  
   toggleOpen(event: Event) {
     event.stopPropagation();
     this.open = !this.open;
@@ -84,12 +61,5 @@ export class TaskCardComponent {
   // Funções auxiliares
   isArray(val: any): boolean {
     return Array.isArray(val);
-  }
-
-  getCategoryColor(category: string): string {
-    if (category in this.categoryColors) {
-      return this.categoryColors[category as CategoryChip];
-    }
-    return 'bg-gray-500 text-gray-700';
   }
 }
