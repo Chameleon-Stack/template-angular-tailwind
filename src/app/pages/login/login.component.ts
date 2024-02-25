@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth/auth.service';
 import { UserEventService } from '@services/user-event/user-event.service';
+import { UserService } from '@services/user/user.service';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private userEventService: UserEventService,
     private router: Router,
     private toastr: ToastrService
@@ -40,17 +42,20 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe({
-        next: (session) => {
-          localStorage.setItem('token', session.token);
-          const user = JSON.stringify(session.user);
-          localStorage.setItem('user', user);
-          this.userEventService.emit(session.user);
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          this.toastr.error('Falha no login. Por favor, tente novamente.');
-        },
+        next: session => this.handleSuccessfulLogin(session),
+        error: () => this.toastr.error('Falha no login. Por favor, tente novamente.')
       });
     }
+  }
+
+  private handleSuccessfulLogin(session: any) {
+    localStorage.setItem('token', session.token);
+    if (session.user.photo) {
+      session.user.photo = this.userService.getPhotoUrl(session.user.photo);
+    }
+    const user = JSON.stringify(session.user);
+    localStorage.setItem('user', user);
+    this.userEventService.emit(session.user);
+    this.router.navigate(['/']);
   }
 }

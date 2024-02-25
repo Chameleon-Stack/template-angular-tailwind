@@ -45,7 +45,9 @@ export class RegisterComponent implements OnInit {
       ? JSON.parse(localStorage.getItem('user') || '{}')
       : null;
     if (this.user) {
-      this.user.photo ? (this.selectedImageUrl = this.user.photo as string) : null;
+      this.user.photo
+        ? (this.selectedImageUrl = this.user.photo as string)
+        : null;
       this.form.patchValue({
         name: this.user.name,
         email: this.user.email,
@@ -68,7 +70,7 @@ export class RegisterComponent implements OnInit {
     formData.append('email', this.form.get('email')?.value);
     formData.append('password', this.form.get('password')?.value);
     formData.append('new_password', this.form.get('new_password')?.value);
-    formData.append('photo', this.selectedImageFile);
+    if (this.selectedImageFile) formData.append('file', this.selectedImageFile);
 
     if (this.user) {
       await this.updateUser(this.user.id, formData);
@@ -142,6 +144,9 @@ export class RegisterComponent implements OnInit {
       const userPromise = this.userService.update(id, formData);
       const user = await firstValueFrom(userPromise);
       this.toastr.success('Usuário atualizado com sucesso!', 'Sucesso');
+      user.photo && typeof user.photo === 'string'
+        ? (user.photo = this.userService.getPhotoUrl(user.photo))
+        : null;
       localStorage.setItem('user', JSON.stringify(user));
       this.userEventService.emit(user);
     } catch (error: any) {

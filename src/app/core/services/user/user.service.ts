@@ -28,4 +28,8 @@ export class UserService {
   update(id: string, user: User | FormData): Observable<User> {
     return this.http.patch<User>(`${this.baseUrl}/user/${id}`, user);
   }
+
+  getPhotoUrl(photo: string): string {
+    return `${this.baseUrl}/user/uploads/${photo}`;
+  }
 }
